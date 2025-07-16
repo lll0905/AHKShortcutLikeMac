@@ -1,0 +1,34 @@
+[ids]
+*
+
+[main]
+
+# 修改这一行：点击输出 Esc，按住激活 nav 层
+leftmeta = layer(super)
+capslock = overload(ctrl_vim, esc)
+
+
+
+[ctrl_vim:C]
+h = left
+j = down
+k = up
+l = right
+e = end
+i = home
+
+
+
+
+
+[super:M]
+c = C-c
+v = C-v
+w = C-w
+x = C-x
+z = C-z
+t = C-t
+` = C-`
+backspace = macro(end S-home backspace)
+
+
