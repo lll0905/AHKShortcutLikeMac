@@ -4,6 +4,7 @@
 [main]
 
 # 修改这一行：点击输出 Esc，按住激活 nav 层
+#capslock = layer(nav)
 leftmeta = layer(super)
 capslock = overload(ctrl_vim, esc)
 
@@ -24,11 +25,21 @@ i = home
 [super:M]
 c = C-c
 v = C-v
+s = C-s
 w = C-w
 x = C-x
 z = C-z
 t = C-t
 ` = C-`
 backspace = macro(end S-home backspace)
+1 = C-1
+2 = C-2
+3 = C-3
+4 = C-4
+5 = C-5
+6 = C-6
+7 = C-7
+8 = C-8
+9 = C-9
 
 
