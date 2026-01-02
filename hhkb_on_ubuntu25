@@ -1,0 +1,24 @@
+[ids]
+*
+
+[global]
+# 按住超过 200ms 判定为「按住」，低于则为「点击」
+hold_timeout = 200
+double_timeout = 600
+
+[main]
+leftcontrol = overload(control, esc)
+space = overload(control, space)
+
+
+
+[control:C]
+h = left
+j = down
+k = up
+l = right
+e = end
+i = home
+
+
+
