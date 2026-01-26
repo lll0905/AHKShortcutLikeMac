@@ -3,22 +3,52 @@
 
 [global]
 # 按住超过 200ms 判定为「按住」，低于则为「点击」
-hold_timeout = 200
+hold_timeout = 1500
 double_timeout = 600
 
 [main]
-leftcontrol = overload(control, esc)
-space = overload(control, space)
+#=======================================================
+# hhkb settings
+#=======================================================
+# esc(2) = shift+ctrl       # 双击ESC → 切换输入法
+leftcontrol = overload(ctrl_vim, esc)
+space = overload(ctrl_vim, space)
+
+# rightalt to delete key
+rightalt = backspace
 
 
-
-[control:C]
+[ctrl_vim:C]
 h = left
 j = down
 k = up
 l = right
 e = end
 i = home
+backspace = macro(end S-home backspace)
 
+[leftmeta]
+c = C-c
+v = C-v
+s = C-s
+w = C-w
+q = C-q
+f = C-f
+x = C-x
+z = C-z
+t = C-t
+` = C-`
 
+1 = C-1
+2 = C-2
+3 = C-3
+4 = C-4
+5 = C-5
+6 = C-6
+7 = C-7
+8 = C-8
+9 = C-9
 
+backspace = macro(end S-home backspace)
+d = macro(home S-end C-c right enter C-v)
+#=======================================================
