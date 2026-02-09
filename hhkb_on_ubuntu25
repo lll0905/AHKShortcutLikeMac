@@ -13,6 +13,7 @@ double_timeout = 600
 # esc(2) = shift+ctrl       # 双击ESC → 切换输入法
 leftcontrol = overload(ctrl_vim, esc)
 space = overload(ctrl_vim, space)
+leftmeta = overload(leftmeta_mode, leftmeta)
 
 # rightalt to delete key
 rightalt = backspace
@@ -27,7 +28,7 @@ e = end
 i = home
 backspace = macro(end S-home backspace)
 
-[leftmeta]
+[leftmeta_mode:M]
 c = C-c
 v = C-v
 s = C-s
