@@ -171,25 +171,67 @@ TargetProgram := "C:\Users\xialin.luo\scoop\apps\warp-terminal\0.2026.05.27.15.4
 
 
 
+
 ; ======================================================
-; 选中的文本直接用google AI搜索
+; 选中的文本直接用 Google AI 搜索（无选中则弹出输入框版）
 ; ======================================================
-; Ctrl + Shift + S: 用 Google AI 搜索选中的报错信息
+; Ctrl + Alt + F: 触发搜索
 ^!f::
 {
-    OriginalClipboard := A_Clipboard  ; 备份当前剪贴板
-    A_Clipboard := ""                 ; 清空剪贴板以备接收
-    Send("^c")                        ; 复制选中的文本
-    if ClipWait(1)                    ; 等待最多1秒直到文本复制成功
+    OriginalClipboard := ClipboardAll()  ; 完美备份所有格式
+    A_Clipboard := ""                    ; 清空剪贴板以备接收
+
+    Send("^c")                           ; 尝试复制选中的文本
+    ClipWait(0.2)                        ; 只等待0.2秒，快速判断有没有选中文字
+
+    ; 移除文本前后的空白字符（空格、换行、Tab）
+    SearchText := Trim(A_Clipboard)
+
+    ; 情况 1：如果没有选中任何文字，则弹出手动输入框
+    if (SearchText == "")
     {
-        ; 核心技巧：加入 &udm=50 强制谷歌以 AI 模式首发渲染
-        QueryUrl := "https://google.com/search?q=" . UriEncode(A_Clipboard) . "&udm=50"
-        Run(QueryUrl)
+        ; 恢复剪贴板
+        A_Clipboard := OriginalClipboard
+
+        ; 弹出输入框，标题为“Google AI 搜索”，提示语为“请输入搜索内容：”
+        IB := InputBox("请输入搜索内容：", "Google AI 搜索", "w400 h100")
+
+        ; 如果用户点击了“取消”或直接关闭了窗口，则退出不执行搜索
+        if (IB.Result = "Cancel")
+            return
+
+        SearchText := Trim(IB.Value)
+
+        ; 如果用户什么都没输入就点了确定，也直接退出
+        if (SearchText == "")
+            return
     }
-    A_Clipboard := OriginalClipboard  ; 还原剪贴板
+    else
+    {
+        ; 情况 2：成功复制到了选中的文字，延迟一会后还原剪贴板
+        Sleep(50)
+        A_Clipboard := OriginalClipboard
+    }
+
+    ; 执行标准的 URL 编码并打开浏览器搜索
+    QueryUrl := "https://google.com/search?q=" . NativeUriEncode(SearchText) . "&udm=50"
+    Run(QueryUrl)
 }
 
-; 辅助函数：对 URL 进行转义（避免空格和特殊字符导致网址断开）
-UriEncode(str) {
-    return StrReplace(str, " ", "%20") ; 简单替换，复杂情况可使用更完整的转义函数
+; 纯 AHK v2 原生 URL 编码函数
+NativeUriEncode(str) {
+    buf := Buffer(StrPut(str, "UTF-8"))
+    StrPut(str, buf, "UTF-8")
+
+    result := ""
+    Loop buf.Size - 1 {
+        code := NumGet(buf, A_Index - 1, "UChar")
+        if ((code >= 65 && code <= 90) || (code >= 97 && code <= 122) || (code >= 48 && code <= 57) || InStr("-_.!~*'()", Chr(code))) {
+            result .= Chr(code)
+        } else {
+            result .= Format("%{:02X}", code)
+        }
+    }
+    return result
 }
+
